@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ยืนยันการสั่งซื้อสำเร็จ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container py-5 text-center">
+    <div class="alert alert-success text-center">
+        <h4 class="alert-heading">✅ สั่งอาหารเรียบร้อย!</h4>
+        <p>หมายเลขออเดอร์ของคุณคือ: <strong th:text="${orderId}">#123</strong></p>
+        <p>กรุณาจดหมายเลขนี้ไว้เพื่อตรวจสอบสถานะอาหารของคุณ</p>
+        <p>ขอบคุณที่ใช้บริการ กรุณารออาหารที่โต๊ะของคุณ</p>
+    </div>
+
+    <div class="text-center mt-4">
+        <a th:href="@{/customer/status(tableNumber=${tableNumber})}" class="btn btn-info me-2">
+        📡 ติดตามสถานะรายการอาหาร
+        </a>
+        <a href="/order" class="btn btn-secondary">
+        🔁 กลับไปสั่งออเดอร์ใหม่
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

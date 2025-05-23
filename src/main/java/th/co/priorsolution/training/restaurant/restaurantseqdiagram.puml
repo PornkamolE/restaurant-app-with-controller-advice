@@ -1,0 +1,65 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+actor Customer
+participant "FoodMenuService" as MenuService
+participant "OrderTaker (OT)" as OT
+participant "OrderController" as Controller
+participant "OrderService" as OrderService
+participant "StationRouter" as Router
+participant "GrillStation" as Grill
+participant "PastaStation" as Pasta
+participant "SaladStation" as Salad
+participant "BeverageStation" as Beverage
+participant "ManagerService" as Manager
+participant "WaitressService" as Waitress
+participant "TableService" as TableService
+database "Table" as Table
+
+== ดูเมนู ==
+Customer -> MenuService : GET /api/menu
+MenuService -> MenuService : ดึงรายการอาหารทั้งหมด
+MenuService --> Customer : ส่งเมนูกลับไปแสดง
+
+== เลือกเมนู + ใส่เลขโต๊ะ ==
+Customer -> OT : แจ้งเมนู + เลขโต๊ะ
+OT -> Customer : ทวนรายการอาหาร
+Customer -> OT : ยืนยันรายการ
+
+== ส่งออเดอร์เข้า backend ==
+OT -> Controller : POST /api/orders (CustomerOrderDto)
+Controller -> OrderService : createOrder(dto)
+OrderService -> StationRouter : routeToStations(order)
+
+== แยกไปแต่ละ Station ==
+Router -> Grill : ส่งเมนู Grill
+Router -> Pasta : ส่งเมนู Pasta
+Router -> Salad : ส่งเมนู Salad
+Router -> Beverage : ส่งเมนู Beverage
+
+== แจ้ง Manager ==
+OrderService -> Manager : notify(order summary)
+
+== แต่ละ Station ทำอาหาร ==
+Grill -> Grill : ทำเมนู grill
+Pasta -> Pasta : ทำเมนู pasta
+Salad -> Salad : ทำเมนู salad
+Beverage -> Beverage : ทำเครื่องดื่ม
+
+== เมื่อทุก station เสร็จ ==
+Grill -> Waitress : เมนู Grill เสร็จแล้ว
+Pasta -> Waitress : เมนู Pasta เสร็จแล้ว
+Salad -> Waitress : เมนู Salad เสร็จแล้ว
+Beverage -> Waitress : เครื่องดื่มเสร็จแล้ว
+
+== Waitress เสิร์ฟอาหาร ==
+Waitress -> Customer : เสิร์ฟอาหารทั้งหมด
+Waitress -> TableService : แจ้งโต๊ะเสร็จสิ้น
+TableService -> Table : เปลี่ยนสถานะเป็น COMPLETED
+Waitress -> "TableService" : ทำความสะอาดโต๊ะ
+TableService -> Table : เปลี่ยนสถานะเป็น AVAILABLE
+
+
+
+@enduml
