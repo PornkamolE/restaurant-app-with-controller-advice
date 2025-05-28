@@ -1,4 +1,4 @@
-package th.co.priorsolution.training.restaurant.controller.rest;
+package th.co.priorsolution.training.restaurant.restcontroller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

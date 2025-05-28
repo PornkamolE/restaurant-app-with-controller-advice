@@ -1,4 +1,4 @@
-package th.co.priorsolution.training.restaurant.controller.rest;
+package th.co.priorsolution.training.restaurant.restcontroller;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

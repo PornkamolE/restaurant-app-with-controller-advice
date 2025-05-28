@@ -1,4 +1,4 @@
-package th.co.priorsolution.training.restaurant.controller.rest;
+package th.co.priorsolution.training.restaurant.restcontroller;
 
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import th.co.priorsolution.training.restaurant.entity.OrderEntity;
 import th.co.priorsolution.training.restaurant.model.CustomerOrderDtoModel;
 import th.co.priorsolution.training.restaurant.model.OrderStatusDtoModel;
-import th.co.priorsolution.training.restaurant.model.ResponseModel;
 import th.co.priorsolution.training.restaurant.service.OrderService;
 
 @RestController

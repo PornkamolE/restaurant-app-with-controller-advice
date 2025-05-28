@@ -1,10 +1,9 @@
-package th.co.priorsolution.training.restaurant.controller.rest;
+package th.co.priorsolution.training.restaurant.restcontroller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import th.co.priorsolution.training.restaurant.exception.ApiOrderNotFoundException;
 import th.co.priorsolution.training.restaurant.exception.FoodMenuNotFoundException;
@@ -12,7 +11,7 @@ import th.co.priorsolution.training.restaurant.exception.FoodMenuNotFoundExcepti
 import java.util.*;
 import java.util.stream.Collectors;
 
-@RestControllerAdvice(basePackages = "th.co.priorsolution.training.restaurant.controller.rest")
+@RestControllerAdvice(basePackages = "th.co.priorsolution.training.restaurant.restcontroller")
 public class ExceptionHandlerRestController {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

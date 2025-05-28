@@ -57,6 +57,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // Extract JWT token from Authorization header
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
+        }
+
+        if (jwt == null && request.getCookies() != null) {
+            for (var cookie : request.getCookies()) {
+                if ("jwt".equals(cookie.getName())) {
+                    jwt = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        // ดึง username ถ้าเจอ jwt
+        if (jwt != null) {
             try {
                 username = jwtTokenUtil.extractUsername(jwt);
             } catch (Exception e) {
