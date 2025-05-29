@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jasperReport PUBLIC "-//JasperReports//DTD Report Design//EN"
+        "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports
+              http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="orders_report" pageWidth="595" pageHeight="842" columnWidth="555"
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3d06ae51-904d-4fdd-9153-f667eaccf082">
+
+    <parameter name="createdBy" class="java.lang.String"/>
+    <parameter name="totalRevenue" class="java.lang.Double"/>
+
+    <field name="orderId" class="java.lang.Long"/>
+    <field name="tableNumber" class="java.lang.Integer"/>
+    <field name="createdAt" class="java.lang.String"/>
+    <field name="status" class="java.lang.String"/>
+    <field name="menuName" class="java.lang.String"/>
+    <field name="price" class="java.lang.Double"/>
+
+    <title>
+        <band height="50">
+            <staticText>
+                <reportElement x="0" y="10" width="555" height="30"/>
+                <textElement textAlignment="Center">
+                    <font size="18" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Orders Report]]></text>
+            </staticText>
+        </band>
+    </title>
+
+    <columnHeader>
+        <band height="20">
+            <textField><reportElement x="0" y="0" width="70" height="20"/><textFieldExpression><![CDATA["Order ID"]]></textFieldExpression></textField>
+            <textField><reportElement x="70" y="0" width="80" height="20"/><textFieldExpression><![CDATA["Table"]]></textFieldExpression></textField>
+            <textField><reportElement x="150" y="0" width="120" height="20"/><textFieldExpression><![CDATA["Created At"]]></textFieldExpression></textField>
+            <textField><reportElement x="270" y="0" width="80" height="20"/><textFieldExpression><![CDATA["Status"]]></textFieldExpression></textField>
+            <textField><reportElement x="350" y="0" width="120" height="20"/><textFieldExpression><![CDATA["Menu Name"]]></textFieldExpression></textField>
+            <textField><reportElement x="470" y="0" width="85" height="20"/><textFieldExpression><![CDATA["Price"]]></textFieldExpression></textField>
+        </band>
+    </columnHeader>
+
+    <detail>
+        <band height="20">
+            <textField><reportElement x="0" y="0" width="70" height="20"/><textFieldExpression><![CDATA[$F{orderId}]]></textFieldExpression></textField>
+            <textField><reportElement x="70" y="0" width="80" height="20"/><textFieldExpression><![CDATA[$F{tableNumber}]]></textFieldExpression></textField>
+            <textField><reportElement x="150" y="0" width="120" height="20"/><textFieldExpression><![CDATA[$F{createdAt}]]></textFieldExpression></textField>
+            <textField><reportElement x="270" y="0" width="80" height="20"/><textFieldExpression><![CDATA[$F{status}]]></textFieldExpression></textField>
+            <textField><reportElement x="350" y="0" width="120" height="20"/><textFieldExpression><![CDATA[$F{menuName}]]></textFieldExpression></textField>
+            <textField><reportElement x="470" y="0" width="85" height="20"/><textFieldExpression><![CDATA[$F{price}]]></textFieldExpression></textField>
+        </band>
+    </detail>
+
+    <summary>
+        <band height="30">
+            <staticText>
+                <reportElement x="350" y="0" width="120" height="20"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Total Revenue:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="470" y="0" width="85" height="20"/>
+                <textElement textAlignment="Right"/>
+                <textFieldExpression><![CDATA[$P{totalRevenue}]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+</jasperReport>
