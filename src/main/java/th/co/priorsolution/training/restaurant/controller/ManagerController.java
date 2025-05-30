@@ -31,13 +31,34 @@ public class ManagerController {
     private final OrderRepository orderRepository;
 
     @GetMapping("/dashboard")
-    public String viewDashboard(Model model) {
+    public String viewDashboard(
+            @RequestParam(value = "viewType", defaultValue = "ALL") String viewType,
+            @RequestParam(value = "date", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam(value = "year", required = false) Integer year,
+            @RequestParam(value = "month", required = false) Integer month,
+            Model model) {
+
         List<OrderEntity> allOrders = orderRepository.findAll();
+        List<OrderEntity> filteredOrders = new ArrayList<>();
+
+        if ("DAILY".equals(viewType) && date != null) {
+            filteredOrders = allOrders.stream()
+                    .filter(o -> o.getCreatedAt().toLocalDate().isEqual(date))
+                    .toList();
+        } else if ("MONTHLY".equals(viewType) && year != null && month != null) {
+            filteredOrders = allOrders.stream()
+                    .filter(o -> o.getCreatedAt().getYear() == year &&
+                            o.getCreatedAt().getMonthValue() == month)
+                    .toList();
+        } else {
+            filteredOrders = allOrders;
+        }
 
         List<TableSummaryViewModel> tableSummaries = new ArrayList<>();
         double grandTotal = 0;
 
-        for (OrderEntity order : allOrders) {
+        for (OrderEntity order : filteredOrders) {
             List<OrderItemDtoModel> items = order.getItems().stream().map(item -> {
                 OrderItemDtoModel dto = new OrderItemDtoModel();
                 dto.setMenuName(item.getMenuName());
@@ -57,35 +78,20 @@ public class ManagerController {
             tableSummaries.add(new TableSummaryViewModel(order.getTableNumber(), items, totalPrice, status));
         }
 
+        model.addAttribute("viewType", viewType);
+        model.addAttribute("date", date);
+        model.addAttribute("year", year);
+        model.addAttribute("month", month);
         model.addAttribute("tableSummaries", tableSummaries);
         model.addAttribute("grandTotal", grandTotal);
         return "manager-dashboard";
     }
 
+
     @GetMapping("/export/csv")
     public ResponseEntity<Resource> exportCSV() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        OutputStreamWriter writer = new OutputStreamWriter(out);
-        List<OrderEntity> orders = orderRepository.findAll();
-
-        writer.write("Order ID,Table Number,Created At,Status,Menu Name,Price\n");
-        for (OrderEntity order : orders) {
-            for (OrderItemEntity item : order.getItems()) {
-                writer.write(order.getId() + "," +
-                        order.getTableNumber() + "," +
-                        order.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + "," +
-                        order.getStatus().name() + "," +
-                        item.getMenuName() + "," +
-                        item.getPrice() + "\n");
-            }
-        }
-        double total = orders.stream()
-                .flatMap(o -> o.getItems().stream())
-                .mapToDouble(OrderItemEntity::getPrice)
-                .sum();
-        writer.write("\nTotal Revenue,,,,," + total + "\n");
-
-        writer.flush();
+        managerService.exportOrdersToCSV(out);
         ByteArrayResource resource = new ByteArrayResource(out.toByteArray());
 
         return ResponseEntity.ok()

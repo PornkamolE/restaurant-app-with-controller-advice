@@ -17,6 +17,38 @@
     <a href="/manager/export/pdf" class="btn btn-outline-danger">🧾 Export PDF</a>
   </div>
 
+  <form method="get" action="/manager/dashboard" class="mb-4">
+    <div class="row g-2 align-items-end">
+      <!-- View Type -->
+      <div class="col-md-3">
+        <label for="viewType" class="form-label">📅 View Type:</label>
+        <select name="viewType" id="viewType" class="form-select" onchange="this.form.submit()">
+          <option value="ALL" th:selected="${viewType == 'ALL'}">ทั้งหมด</option>
+          <option value="DAILY" th:selected="${viewType == 'DAILY'}">รายวัน</option>
+          <option value="MONTHLY" th:selected="${viewType == 'MONTHLY'}">รายเดือน</option>
+        </select>
+      </div>
+
+      <!-- Daily Date Picker -->
+      <div class="col-md-3" th:if="${viewType == 'DAILY'}">
+        <label for="date" class="form-label">เลือกวันที่:</label>
+        <input type="date" id="date" name="date" class="form-control" th:value="${date}" onchange="this.form.submit()" />
+      </div>
+
+      <!-- Monthly Picker -->
+      <div class="col-md-3" th:if="${viewType == 'MONTHLY'}">
+        <label for="year" class="form-label">ปี (เช่น 2025):</label>
+        <input type="number" id="year" name="year" class="form-control" th:value="${year}" placeholder="เช่น 2025" onchange="this.form.submit()" />
+      </div>
+
+      <div class="col-md-3" th:if="${viewType == 'MONTHLY'}">
+        <label for="month" class="form-label">เดือน (1-12):</label>
+        <input type="number" id="month" name="month" class="form-control" th:value="${month}" min="1" max="12" placeholder="เช่น 5" onchange="this.form.submit()" />
+      </div>
+    </div>
+  </form>
+
+
   <!-- ตารางแต่ละโต๊ะ -->
   <div th:each="tableInfo : ${tableSummaries}"
        th:class="'card mb-4 shadow-sm ' + (${tableInfo.status} == 'DONE' ? 'border-secondary bg-light' : '')">
