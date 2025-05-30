@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import th.co.priorsolution.training.restaurant.exception.ApiOrderNotFoundException;
 import th.co.priorsolution.training.restaurant.exception.FoodMenuNotFoundException;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -67,5 +68,11 @@ public class ExceptionHandlerRestController {
         body.put("error", ex.getMessage());
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<String> handleIOException(IOException e) {
+        return ResponseEntity.status(500).body("Export failed: " + e.getMessage());
+    }
+
 
 }

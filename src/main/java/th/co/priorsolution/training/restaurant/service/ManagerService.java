@@ -5,6 +5,7 @@ import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import th.co.priorsolution.training.restaurant.entity.OrderEntity;
 import th.co.priorsolution.training.restaurant.entity.OrderItemEntity;
@@ -44,6 +45,12 @@ public class ManagerService {
                 .toList();
     }
 
+    public ByteArrayResource getCsvResource() throws IOException{
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        exportOrdersToCSV(out);
+        return new ByteArrayResource(out.toByteArray());
+    }
+
     public void exportOrdersToCSV(OutputStream out) throws IOException {
         List<OrderExportDtoModel> dtos = getAllOrderExportDto();
         try (OutputStreamWriter writer = new OutputStreamWriter(out)) {
@@ -62,6 +69,12 @@ public class ManagerService {
             double total = dtos.stream().mapToDouble(OrderExportDtoModel::getPrice).sum();
             writer.write("\nTotal Revenue,,,,," + total + "\n");
         }
+    }
+
+    public ByteArrayResource getExcelResource() throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        exportOrdersToExcel(out);
+        return new ByteArrayResource(out.toByteArray());
     }
 
     public void exportOrdersToExcel(OutputStream out) throws IOException {
@@ -95,6 +108,12 @@ public class ManagerService {
 
         workbook.write(out);
         workbook.close();
+    }
+
+    public ByteArrayResource getPdfResource(String jrxmlPath) throws JRException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        exportOrdersToJasper(jrxmlPath, out);
+        return new ByteArrayResource(out.toByteArray());
     }
 
     public void exportOrdersToJasper(String jrxmlClasspath, OutputStream outputPdfPath) throws JRException {
